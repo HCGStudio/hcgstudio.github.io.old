@@ -1,0 +1,85 @@
+﻿@page "/schedule"
+@using System.ComponentModel.Design
+@using System.Diagnostics
+@using System.IO
+@using System.Text
+@using Blazor.FileReader
+@using BlazorFileSaver
+@using HCGStudio.HITScheduleMasterCore
+@using Ical.Net.Serialization
+@inject IFileReaderService fileReaderService
+
+<h1>课表工具</h1>
+<p>用于将教务处下载的课表转化为iCal格式！</p>
+<h2>第一步</h2>
+<p>到<a href="http://jwts-hit-edu-cn.ivpn.hit.edu.cn/">教务系统</a>下载XLS格式的课表。</p>
+<h2>第二步</h2>
+<p>将XLS文件转换为UTF-8编码的CSV文件，在Excel里面另存为就可以了。</p>
+<p><b>这很重要</b>，因为网页版目前不支持GBK编码，导入会出现错误。这需要等MS修复，请不要因此开issues。</p>
+<p>想要直接转换？请使用<a href="https://github.com/HCGStudio/HIT-Schedule-Master-Bael">命令行版</a>。</p>
+<h2>第三步</h2>
+<p><Input type="file" @ref=inputTypeFileElement /></p>
+<div>
+    然后 <Button Color="Color.Primary" @onclick=ReadFile>加载</Button>&nbsp;
+    @if (IsScheduleReady)
+    {
+        <div><i class="fa fa-check text-success" />车备好了</div>
+    }
+    else
+    {
+        <div><i class="fa fa-exclamation text-danger" />&nbsp;车备没备好</div>
+    }
+</div>
+<h2>第四步</h2>
+<p>在<a class="text-dark" href="https://mzh.moegirl.org/zh-hans/%E4%B8%8D%E8%A6%81%E5%81%9C%E4%B8%8B%E6%9D%A5%E5%95%8A%EF%BC%81">车备好之后</a>，下载！</p>
+@if (IsScheduleReady)
+{
+    <Button Color="Color.Success" @onclick=RideOn>RideOn!</Button>
+}
+@code
+{
+    [Inject]
+    private IBlazorFileSaver BlazorFileSaver { get; set; }
+    ElementReference inputTypeFileElement;
+    Schedule Schedule;
+    public bool IsScheduleReady => Schedule?.Count > 0;
+    public bool IsUploadedFailed { get; set; }
+    private string FileName { get; set; }
+    public async Task RideOn()
+    {
+        var cal = Schedule.GetCalendar();
+        await BlazorFileSaver.SaveAs(FileName + ".ics", new CalendarSerializer().SerializeToString(cal), "text/calendar;charset=utf-8");
+    }
+    public async Task ReadFile()
+    {
+        foreach (var file in await fileReaderService.CreateReference(inputTypeFileElement).EnumerateFilesAsync())
+        {
+            var info = await file.ReadFileInfoAsync();
+            FileName = info.Name.Split(".").First();
+            await using Stream stream = await file.OpenReadAsync();
+            try
+            {
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+                var mem = new MemoryStream();
+                var buf = new byte[512];
+                var num = await stream.ReadAsync(buf);
+                while (num > 0)
+                {
+                    Console.WriteLine(num);
+                    await mem.WriteAsync(buf, 0, num);
+                    num = await stream.ReadAsync(buf);
+                }
+                Schedule = Schedule.LoadFromCsvStream(mem);
+                foreach (var scheduleEntry in Schedule.Entries)
+                {
+                    Console.WriteLine(scheduleEntry.CourseName);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+    }
+}
