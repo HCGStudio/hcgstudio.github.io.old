@@ -1,4 +1,4 @@
-﻿@page "/schedule_advanced"
+﻿@page "/advanced_schedule"
 @using System.IO
 @using System.Text
 @using Blazor.FileReader
@@ -35,7 +35,7 @@
     private IBlazorFileSaver BlazorFileSaver { get; set; }
     ElementReference inputTypeFileElement;
     Schedule Schedule;
-    public bool IsScheduleReady => Schedule?.Count > 0;
+    public bool IsScheduleReady => false;
     public bool IsUploadedFailed { get; set; }
     private string FileName { get; set; }
     public bool Pending { get; set; }

@@ -1,0 +1,25 @@
+﻿@using Markdig
+
+
+@if (Content == null)
+{
+    <span><i class="fa fa-spinner fa-spin text-primary"></i>少女祈祷中</span>
+}
+else
+{
+    @((MarkupString)BuildHtmlFromMarkdown(Content))
+}
+
+@functions {
+
+    [Parameter]
+    public string Content { get; set; }
+    [Parameter]
+    public string Source { get; set; }
+
+    private string BuildHtmlFromMarkdown(string value) => Markdig.Markdown.ToHtml(
+        markdown: value,
+        pipeline: new MarkdownPipelineBuilder().UseAdvancedExtensions().Build()
+        ).Replace("<img", "<img class=\"img-fluid\" ");
+
+}
