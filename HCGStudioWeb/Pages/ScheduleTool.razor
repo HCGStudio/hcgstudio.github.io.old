@@ -19,15 +19,20 @@
 <p>想要直接转换？请使用<a href="https://github.com/HCGStudio/HIT-Schedule-Master-Bael">命令行版</a>。</p>
 <h2>第三步</h2>
 <p><Input type="file" @ref=inputTypeFileElement /></p>
+
 <div>
     然后 <Button Color="Color.Primary" @onclick=ReadFile>加载</Button>&nbsp;
     @if (IsScheduleReady)
     {
         <div><i class="fa fa-check text-success" />车备好了</div>
     }
+    else if(!Pending)
+    {
+        <div><i class="fa fa-exclamation text-danger" />&nbsp;车还没备好</div>
+    }
     else
     {
-        <div><i class="fa fa-exclamation text-danger" />&nbsp;车备没备好</div>
+        <div><i class="fa fa-spinner fa-spin text-primary"></i>莱德，查德，把车开到后面！</div>
     }
 </div>
 <h2>第四步</h2>
@@ -45,6 +50,7 @@
     public bool IsScheduleReady => Schedule?.Count > 0;
     public bool IsUploadedFailed { get; set; }
     private string FileName { get; set; }
+    public bool Pending { get; set; }
     public async Task RideOn()
     {
         var cal = Schedule.GetCalendar();
@@ -59,6 +65,8 @@
             await using Stream stream = await file.OpenReadAsync();
             try
             {
+                Pending = true;
+                StateHasChanged();
                 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
                 var mem = new MemoryStream();
@@ -79,6 +87,10 @@
             catch (Exception e)
             {
                 Console.WriteLine(e);
+            }
+            finally
+            {
+                Pending = false;
             }
         }
     }

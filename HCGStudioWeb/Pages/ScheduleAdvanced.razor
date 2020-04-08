@@ -1,0 +1,85 @@
+﻿@page "/schedule_advanced"
+@using System.IO
+@using System.Text
+@using Blazor.FileReader
+@using BlazorFileSaver
+@using HCGStudio.HITScheduleMasterCore
+@using Ical.Net.Serialization
+@inject IFileReaderService fileReaderService
+
+
+<h1>课表工具高级版</h1>
+<p>用于将教务处下载的课表转化为iCal格式！</p>
+<strong>正在开发中，请勿使用！</strong>
+<p><Input type="file" @ref=inputTypeFileElement /></p>
+
+<div>
+    <Button Color="Color.Primary" @onclick=ReadFile>加载</Button>&nbsp;
+    @if (IsScheduleReady)
+    {
+        <div><i class="fa fa-check text-success" />车备好了</div>
+    }
+    else if (!Pending)
+    {
+        <div><i class="fa fa-exclamation text-danger" />&nbsp;车还没备好</div>
+    }
+    else
+    {
+        <div><i class="fa fa-spinner fa-spin text-primary"></i>莱德，查德，把车开到后面！</div>
+    }
+</div>
+
+@code {
+
+    [Inject]
+    private IBlazorFileSaver BlazorFileSaver { get; set; }
+    ElementReference inputTypeFileElement;
+    Schedule Schedule;
+    public bool IsScheduleReady => Schedule?.Count > 0;
+    public bool IsUploadedFailed { get; set; }
+    private string FileName { get; set; }
+    public bool Pending { get; set; }
+    public async Task RideOn()
+    {
+        var cal = Schedule.GetCalendar();
+        await BlazorFileSaver.SaveAs(FileName + ".ics", new CalendarSerializer().SerializeToString(cal), "text/calendar;charset=utf-8");
+    }
+    public async Task ReadFile()
+    {
+        foreach (var file in await fileReaderService.CreateReference(inputTypeFileElement).EnumerateFilesAsync())
+        {
+            var info = await file.ReadFileInfoAsync();
+            FileName = info.Name.Split(".").First();
+            await using Stream stream = await file.OpenReadAsync();
+            try
+            {
+                Pending = true;
+                StateHasChanged();
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+                var mem = new MemoryStream();
+                var buf = new byte[512];
+                var num = await stream.ReadAsync(buf);
+                while (num > 0)
+                {
+                    Console.WriteLine(num);
+                    await mem.WriteAsync(buf, 0, num);
+                    num = await stream.ReadAsync(buf);
+                }
+                Schedule = Schedule.LoadFromCsvStream(mem);
+                foreach (var scheduleEntry in Schedule.Entries)
+                {
+                    Console.WriteLine(scheduleEntry.CourseName);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            finally
+            {
+                //Pending = false;
+            }
+        }
+    }
+}
