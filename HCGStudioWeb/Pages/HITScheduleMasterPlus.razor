@@ -1,0 +1,16 @@
+﻿@page "/projects/barbatos"
+
+<Markdown Content=@Markdown />
+
+@code {
+    public string Markdown { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var http = new HttpClient();
+        var md = await
+            http.GetStringAsync(
+                "https://raw.githubusercontent.com/HCGStudio/HIT-Schedule-Master-Plus/master/README.md");
+        Markdown = Markdig.Markdown.ToHtml(md);
+    }
+}
