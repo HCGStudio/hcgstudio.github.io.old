@@ -9,22 +9,23 @@
     <link rel="icon"
           type="image/png"
           href="favicon.png">
-    <link href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" />
+    <!--<link href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" />-->
+    <link href="https://cdn.staticfile.org/bootswatch/4.4.1/litera/bootstrap.min.css" rel="stylesheet" />
     <link href="_content/Blazorise/blazorise.css" rel="stylesheet" />
     <link href="_content/Blazorise.Bootstrap/blazorise.bootstrap.css" rel="stylesheet" />
     <link href="css/site.css" rel="stylesheet" />
     <link href="manifest.json" rel="manifest" />
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
     <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/5.12.0/css/all.min.css" />
-    <link rel="stylesheet" href="https://cdn.staticfile.org/prism/9000.0.1/themes/prism.min.css" />
-    <link rel="stylesheet" href="https://cdn.staticfile.org/prism/9000.0.1/plugins/line-numbers/prism-line-numbers.min.css" />
-    <link rel="stylesheet" href="https://cdn.staticfile.org/prism/9000.0.1/plugins/line-highlight/prism-line-highlight.min.css" />
-    <link rel="stylesheet" href="https://cdn.staticfile.org/prism/9000.0.1/plugins/show-language/prism-show-language.min.css" />
+    <link href="css/prism-vs.css" rel="stylesheet" />
+    <link href="https://cdn.staticfile.org/prism/1.20.0/plugins/toolbar/prism-toolbar.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.staticfile.org/prism/1.20.0/plugins/line-numbers/prism-line-numbers.min.css" />
 </head>
 
 <body>
-
-    <app><h1><i class="fa fa-spinner fa-spin text-primary"></i>少女祈祷中</h1></app>
+    <div style="-webkit-user-select: none">
+        <app><h1><i class="fa fa-spinner fa-spin text-primary"></i>少女祈祷中</h1></app>
+    </div>
     <!-- Start Single Page Apps for GitHub Pages -->
     <script type="text/javascript">
         // Single Page Apps for GitHub Pages
@@ -62,17 +63,14 @@
     <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="_content/Blazorise/blazorise.js"></script>
     <script src="_content/Blazorise.Bootstrap/blazorise.bootstrap.js"></script>
-    <script src="https://cdn.staticfile.org/prism/9000.0.1/prism.min.js"></script>
-
-    <script src="https://cdn.staticfile.org/prism/9000.0.1/components/prism-csharp.js"></script>
-    <script src="https://cdn.staticfile.org/prism/9000.0.1/components/prism-css.js"></script>
-    <script src="https://cdn.staticfile.org/prism/9000.0.1/plugins/line-highlight/prism-line-highlight.js"></script>
-    <script src="https://cdn.staticfile.org/prism/9000.0.1/plugins/line-numbers/prism-line-numbers.min.js"></script>
-    <script src="https://cdn.staticfile.org/prism/9000.0.1/plugins/highlight-keywords/prism-highlight-keywords.min.js"></script>
-    <script src="https://cdn.staticfile.org/prism/9000.0.1/plugins/show-language/prism-show-language.min.js"></script>
+    <script src="https://cdn.staticfile.org/prism/1.20.0/prism.min.js"></script>
+    <script src="https://cdn.staticfile.org/prism/1.20.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.staticfile.org/prism/1.20.0/plugins/line-numbers/prism-line-numbers.js"></script>
+    <script src="https://cdn.staticfile.org/prism/1.20.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdn.staticfile.org/prism/1.20.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
     <div id="blazor-error-ui">
         出现了一个无法恢复的严重错误
-        <a href="" class="reload">重新加载</a>
+        <a href="" class="oi oi-reload"></a>
         <a class="dismiss">🗙</a>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
