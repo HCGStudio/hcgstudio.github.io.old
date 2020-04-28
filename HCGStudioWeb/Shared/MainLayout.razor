@@ -1,16 +1,25 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
 <div class="sidebar">
     <NavMenu />
 </div>
 
 <div class="main">
     <div class="top-row px-4">
-            <a href="https://github.com/HCGStudio" class="ml-md-auto text-dark"><i class="fab fa-github"></i></a>
-        </div>
+        <a href="https://github.com/HCGStudio" class="text-dark"><i class="fab fa-github"></i></a>
+        <button @onclick="ForceRefresh" class="btn fas fa-sync-alt"></button>
+    </div>
 
-        <div class="content px-4">
-            @Body
-        </div>
+    <div class="content px-4">
+        @Body
+    </div>
 
 </div>
 
+@code
+{
+    public void ForceRefresh()
+    {
+        NavigationManager.NavigateTo(".", true);
+    }
+}

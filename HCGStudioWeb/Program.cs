@@ -7,6 +7,7 @@ using BlazorFileSaver;
 using Blazorise;
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
+using BlazorPrettyCode;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -27,6 +28,7 @@ namespace HCGStudioWeb
                 })
                 .AddFileReaderService(options => options.UseWasmSharedBuffer = true)
                 .AddBaseAddressHttpClient()
+                .AddBlazorPrettyCode()
                 .AddBlazorFileSaver()
                 .AddBootstrapProviders()
                 .AddFontAwesomeIcons()
